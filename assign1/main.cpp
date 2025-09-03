@@ -10,7 +10,7 @@ int main()
 	cout<<"This software is maintaned by Sola Lhim."<<endl;
 	cout<<"For assistance contact the developer at pooloom069@csu.fullerton.edu.\n"<<endl;
 	//double num = deliver();
-
+	deliver();
 	
 	cout<<"The driver received this number and will keep it for future use.\n"<<endl;
 	cout<<"Thank you for using our software. Have a nice day."<<endl;
