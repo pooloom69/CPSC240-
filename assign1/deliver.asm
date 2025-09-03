@@ -1,5 +1,13 @@
 ;Software license
-;Program Name:
+;Program Name: Vehicle Speed This program demonstrates.  Copyright (C) 2025  Sola Lhim
+
+; This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License  
+; version 3 as published by the Free Software Foundation.                                                                    
+; This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied         
+; warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.      
+; A copy of the GNU General Public License v3 is available here: <https://www.gnu.org/licenses/>.
+
+; Author Information:
 
 
 ;Author info
@@ -8,14 +16,27 @@
 
 
 ;Program information
-;Program name:
-;Program languages:
-;Date Program began:
-;Date of last update:
+;Program name: Vehicle Speed
+;Program languages: C86-64
+;Date Program began: 08/25/2025
+;Date of last update: 
 ;		 
-;Purpose
+;Purpose:
+;The educational purpose of this program is to teach the fundamental tools of programming in X86
+;assembly language. These fundamental tools include partitioning the solution into multiple files,
+;developing a bash file to manage translation and execution, introduction to the floating point registers
+;better known as xmm registers, and the use of library functions within assembly code.
+;The application purpose is to aid a delivery service find total driving time and average road speed of one
+;of it delivery trucks.
 ;
 ;Project Information:
+;American Express Delivery Service is trucking company that delivers high value cargo to commercial
+;clients. It operates several routes in LA, Orange, and San Diego counties. One route goes from Fullerton
+;to Mission Viejo to Long Beach and back to Fullerton. We focus on that one route.
+;For each leg of the trip the GPS unit records the distance traveled and the average speed. Those numbers
+;become inputs for this program. The program will then compute the total driving time and the average
+;speed for the entire trip.
+;The distance in miles for one specific leg of the trip will vary with the route chosen by the driver.
 ;Files: main.cpp deliver.asm run.sh
 ;Language: C86-64
 ;Status:
@@ -25,22 +46,26 @@
 
 extern printf
 extern scanf
-extern strlen
-
+global deliver
 
 ; segment .data is where initialized data is declared
 segment .data
 
-float_format db "%4.2lf",0
-ftom_mile db "Enter the miles driven from Fullerton to Mission Viejo: %4.2lf",0
-ftom_speed db "Enter the average speed(miles per hour)of that leg of the trip: %4.2lf",0
-mtol_mile db "Enter the miles driven from Mission viejo to Long Beach: %4.2lf",0
-mtol_speed db "Enter the average spped(miles per hour)of that leg of the trip: %4.2lf",0
-ltof_mile db "Enter the miles driven from Long Beach to Fullerton: %4.2lf",0
-ltof_speed db "Enter the average speed(miles per hour)of that leg of the trip: %4.2lf",0
 
-total_time db "The total driving time was %4.2lf hours",0
-ave_speed db "The average speed was %4.2lf m/h",0
+; input output format string 
+format_in db "%lf",0
+format_out db "%.2f",0
+
+
+ftom_mile db "Enter the miles driven from Fullerton to Mission Viejo: ",0
+ftom_speed db "Enter the average speed(miles per hour)of that leg of the trip: ",0
+mtol_mile db "Enter the miles driven from Mission viejo to Long Beach: ",0
+mtol_speed db "Enter the average spped(miles per hour)of that leg of the trip: ",0
+ltof_mile db "Enter the miles driven from Long Beach to Fullerton: ",0
+ltof_speed db "Enter the average speed(miles per hour)of that leg of the trip: ",0
+
+total_time db "The total driving time was %.2lf hours",10,0
+ave_speed db "The average speed was %.2lf m/h",10,0
 
 
 ; segment .bss is where ruinitialized data is declared
@@ -52,14 +77,9 @@ segment .bss
 segment .text
 
 ; The header or label 'deliver' defines the initial program entry point
-deliver:
-
-
-;Save/back up the base pointer
-push rbp
-mov rbp, rsp
 
 ;Save back up the general purpose registers (GPRs)
+%macro backup 0
 push rbx
 push rcx
 push rdx
@@ -74,69 +94,9 @@ push r13
 push r14
 push r15
 pushf
+#endmacro
 
-
-; Implement function call here 
-
-;Input miles to Fullerton to Mission Viejo
-mov rax,0
-mov rdi, ftom_mile
-push qword -1
-mov rsi,rsp 
-call scanf
-
-;Input average speed from F to M
-mov rax,0
-mov rdi, ftom_speed
-push qword -1
-mov rsi,rsp
-call scanf
-
-;Input miles to Mission Viejo to Long Beach
-mov rax,0
-mov rdi, mtol_mile
-push qword -1
-mov rsi, rsp
-call scanf
-
-;Input average speed form M to L
-mov rax,0
-mov rdi, mtol_speed
-push qword -1
-mov rsi,rsp
-call scanf
-
-;Input miles to Long Beach to Fullerton
-mov rax,0
-mov rdi, ltof_mile
-push qword -1
-mov rsi,rsp
-call scanf
-
-;Input speed to L to F
-mov rax,0
-mov rdi, ltof_speed
-push qword -1
-mov rsi,rsp
-call scanf
-
-;Output total driving time
-mov rax,0
-mov rdi, total_time
-addsd xmm0, 
-call printf
-
-;Output average speed 
-mov rax,0
-mov rdi, ave_speed
-call printf
- 
-
-
-; Pop the general Purpose Registers (GPRs) so the pointer can be restored to the top of the stack 
-; and the values can be restored before this fuction was called.
-; After all the pops are done, the stack will be back how it was before the function executed.
-popf
+%macro restore 0
 pop r15
 pop r14
 pop r13
@@ -150,12 +110,126 @@ pop rdi
 pop rdx
 pop rcx
 pop rbx
+%endmacro 
 
-; Restore the base pointer
+
+deliver:
+
+push rbp
+mov rbp, rsp
+backup
+
+
+
+; Implement function call here 
+
+;Input miles to Fullerton to Mission Viejo
+mov rax,0
+mov rdi, ftom_mile
+sub rsp, 8
+mov rsi,rsp 
+xor ear, eax
+call scanf
+movsd xmm15, [rsp]
+add rsp, 8
+
+;Input miles to Mission Viejo to Long Beach
+mov rax,0
+mov rdi, mtol_mile
+sub rsp, 8
+mov rsi,rsp 
+xor ear, eax
+call scanf
+movsd xmm14, [rsp]
+add rsp, 8
+
+;Input miles to Long Beach to Fullerton
+mov rax,0
+mov rdi, ltof_mile
+sub rsp, 8
+mov rsi,rsp 
+xor ear, eax
+call scanf
+movsd xmm13, [rsp]
+add rsp, 8
+
+;Input average speed from F to M
+mov rax,0
+mov rdi, ftom_speed
+sub rsp, 8
+mov rsi,rsp 
+xor ear, eax
+call scanf
+movsd xmm8,[rsp]
+add rsp, 8
+
+
+;Input average speed form M to L
+mov rax,0
+mov rdi, mtol_speed
+sub rsp, 8
+mov rsi,rsp 
+xor ear, eax
+call scanf
+movsd xmm9, [rsp]
+add rsp, 8
+
+
+;Input speed to L to F
+mov rax,0
+mov rdi, ltof_speed
+sub rsp, 8
+mov rsi,rsp 
+xor ear, eax
+call scanf
+movsd xmm10, [rsp]
+add rsp, 8
+
+; Computation
+xorpd xmm12, xmm12  
+addsd xmm12, xmm15
+addsd xmm12, xmm14 
+addsd xmm12, xmm13  ; xmm12 = total distance
+
+movapd xmm0, xmm15  ; copy d1 into xmm0
+divsd xmm0, xmm8    ;time ftom  
+
+movapd xmm1, xmm14
+divsd xmm1, xmm9    ; time mtol
+
+movapd xmm2, xmm13
+divsd xmm2, xmm10   ; time ltof
+
+xorpd xmm3, xmm3 
+addsd xmm3, xmm0
+addsd xmm3, xmm1 
+addsd xmm3, xmm2    ; xmm3= total time 
+
+movapd xmm11, xmm12
+divsd xmm11,xmm3    ; xmm11 =average speed
+
+
+
+;Output total driving time
+mov rax,0
+mov rdi, total_time
+movq xmm0,xmm3 ; total time 
+xor eax, eax
+call printf
+
+;Output average speed 
+mov rax,0
+mov rdi, ave_speed
+movq xmm0,xmm11
+xor eax, eax
+call printf
+ 
+
+restore  ; pop 
 pop rbp
 
-; Return
-ret
+ret  ; Return
+
 
 
 
