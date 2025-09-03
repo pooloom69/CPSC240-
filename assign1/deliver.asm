@@ -8,9 +8,6 @@
 ; A copy of the GNU General Public License v3 is available here: <https://www.gnu.org/licenses/>.
 
 ; Author Information:
-
-
-;Author info
 ;Author name: Sola Lhim
 ;Author email: pooloom069@csu.fullerton.edu
 
@@ -56,7 +53,6 @@ segment .data
 format_in db "%lf",0
 format_out db "%.2f",0
 
-
 ftom_mile db "Enter the miles driven from Fullerton to Mission Viejo: ",0
 ftom_speed db "Enter the average speed(miles per hour)of that leg of the trip: ",0
 mtol_mile db "Enter the miles driven from Mission viejo to Long Beach: ",0
@@ -64,13 +60,12 @@ mtol_speed db "Enter the average spped(miles per hour)of that leg of the trip: "
 ltof_mile db "Enter the miles driven from Long Beach to Fullerton: ",0
 ltof_speed db "Enter the average speed(miles per hour)of that leg of the trip: ",0
 
-total_time db "The total driving time was %.2lf hours",10,0
-ave_speed db "The average speed was %.2lf m/h",10,0
+total_time db "The total driving time was %.2f hours",10,0
+ave_speed db "The average speed was %.2f m/h",10,0
 
 
 ; segment .bss is where ruinitialized data is declared
 segment .bss
-
 
 
 ; segment .text is the code
@@ -94,9 +89,10 @@ push r13
 push r14
 push r15
 pushf
-#endmacro
+%endmacro
 
 %macro restore 0
+popf
 pop r15
 pop r14
 pop r13
@@ -120,68 +116,99 @@ mov rbp, rsp
 backup
 
 
-
-; Implement function call here 
-
 ;Input miles to Fullerton to Mission Viejo
-mov rax,0
+;print prompt
 mov rdi, ftom_mile
-sub rsp, 8
-mov rsi,rsp 
-xor ear, eax
+xor eax, eax
+call printf
+
+;real value
+sub rsp,8           ;reserve 8 bytes for a double
+mov rdi, format_in  
+mov rsi, rsp        ;address of that space
+xor eax, eax
 call scanf
-movsd xmm15, [rsp]
-add rsp, 8
+
+movsd xmm15,[rsp]   ; load the double value in xmm15
+add rsp, 8          ; clean up stack
 
 ;Input miles to Mission Viejo to Long Beach
-mov rax,0
+;print prompt
 mov rdi, mtol_mile
-sub rsp, 8
-mov rsi,rsp 
-xor ear, eax
+xor eax, eax
+call printf
+
+;real value
+sub rsp,8
+mov rdi, format_in
+mov rsi, rsp
+xor eax, eax
 call scanf
+
 movsd xmm14, [rsp]
 add rsp, 8
 
 ;Input miles to Long Beach to Fullerton
-mov rax,0
 mov rdi, ltof_mile
+xor eax, eax
+call printf
+
+;real value
 sub rsp, 8
-mov rsi,rsp 
-xor ear, eax
+mov rdi, format_in
+mov rsi, rsp
+xor eax, eax
 call scanf
+
 movsd xmm13, [rsp]
 add rsp, 8
 
 ;Input average speed from F to M
-mov rax,0
+;print prompt
 mov rdi, ftom_speed
+xor eax, eax
+call printf
+
+;real value
 sub rsp, 8
-mov rsi,rsp 
-xor ear, eax
+mov rdi, format_in
+mov rsi, rsp
+xor eax,eax
 call scanf
+
 movsd xmm8,[rsp]
 add rsp, 8
 
 
 ;Input average speed form M to L
-mov rax,0
 mov rdi, mtol_speed
-sub rsp, 8
-mov rsi,rsp 
-xor ear, eax
+xor eax, eax
+call printf
+
+;real value
+sub rsp,8
+mov rdi, format_in
+mov rsi, rsp
+xor eax, eax
 call scanf
+
 movsd xmm9, [rsp]
 add rsp, 8
 
 
 ;Input speed to L to F
-mov rax,0
+;print prompt
 mov rdi, ltof_speed
+xor eax, eax
+call printf
+
+;real value
 sub rsp, 8
-mov rsi,rsp 
-xor ear, eax
+mov rdi, format_in
+mov rsi, rsp
+xor eax, eax
 call scanf
+
 movsd xmm10, [rsp]
 add rsp, 8
 
@@ -209,33 +236,20 @@ movapd xmm11, xmm12
 divsd xmm11,xmm3    ; xmm11 =average speed
 
 
-
 ;Output total driving time
-mov rax,0
+;print prompt
 mov rdi, total_time
-movq xmm0,xmm3 ; total time 
+
+movapd xmm0,xmm3 ; total time 
 xor eax, eax
 call printf
 
 ;Output average speed 
-mov rax,0
 mov rdi, ave_speed
-movq xmm0,xmm11
+movapd xmm0,xmm11
 xor eax, eax
 call printf
  
-
 restore  ; pop 
 pop rbp
-
-ret  ; Return
-
-
-
-
-	
-
-
-
-
-
+ret  ; Return	
