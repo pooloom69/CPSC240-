@@ -40,10 +40,26 @@
 ;
 ;===== Begin code area ====================================================================================================================================================
 %include "data.inc"
-#include <stdio.h>
 
-void display_array(const double *a, long n) {
-    for (long i = 0; i < n; i++) {
-        printf("%f%s", a[i], (i+1==n ? "\n" : " "));
-    }
-}
+
+; Declaration
+
+
+; External functions 
+
+global output_array
+
+; segment .data is where initialized data is declared
+segment .data
+
+
+
+
+; segment .bss is where uninitialized data is declared
+segment .bss
+
+; segment .text is the code
+segment .text
+
+; The header or label 'deliver' defines the initial program entry point
+output_array:
