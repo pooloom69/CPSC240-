@@ -23,8 +23,7 @@
 //  Date of last update: //2025
 // 		 
 //  Purpose:
-//  Sorts the float array in ascending order.
-//  Can be a simple algorithm (e.g., bubble sort).
+//  Sorts the float array in ascending order using selection sort algorithm
 //  Important: Instead of swapping inline, it calls the assembly swap function.
 // 
 //  Project Information:
@@ -41,3 +40,23 @@
 // 
 // 
 // ===== Begin code area ====================================================================================================================================================
+#include <stdio.h>
+
+extern void swap(double *a, double *b);
+
+// selection sort (find smallest to swap from unsorted part)
+void sort(double arr[], long n){
+
+    for(long i=0; i<n-1; i++){
+        long min = i;
+
+        for(long j=i+1; j<n; j++){
+            if(arr[j]<arr[min]){
+                min=j;
+            }
+        }
+        if (min!=i){
+        swap(&arr[i],&arr[min]);
+        }
+    }
+}
