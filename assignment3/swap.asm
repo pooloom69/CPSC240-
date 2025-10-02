@@ -24,7 +24,7 @@
 ;		 
 ; Purpose:
 ; Exchanges the values of two array positions.
-; Replaces the standard “3-step swap” in C.
+; Instead of the standard “3-step swap” in C.
 ;
 ; Project Information:
 ; The primary purpose of this project is to provide a structured environment for learning and practicing the GNU Debugger (GDB). 
@@ -41,3 +41,40 @@
 ;
 ;===== Begin code area ====================================================================================================================================================
 %include "data.inc"
+
+
+; Declaration
+
+
+; External functions 
+
+global swap
+
+; segment .data is where initialized data is declared
+segment .data
+
+
+
+
+; segment .bss is where uninitialized data is declared
+segment .bss
+
+; extern "C" void swap(double* a, double* b);
+; This exchanges the two doubles
+
+section .text
+swap:
+
+; Macro backs up the GPRs
+backup
+
+; Save incoming double values
+movsd xmm0, [rdi]    ; load address of a's value into xmm0 
+movsd xmm1, [rsi]    ; second input address of b 
+movsd [rdi], xmm1    ; xmm1 = rdi's value
+movsd [rsi], xmm0   ; xmm0 = rsi's value 
+
+
+; Restore original values to general registers
+restore
+ret
