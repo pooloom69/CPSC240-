@@ -1,6 +1,6 @@
 // ****************************************************************************************************************************
 //  Project name: "Gnu Debugger".  
-//  This program demonstrates how to make an assembly program that teaches all of the following:
+//  This program demonstrates how to make an assembly program that teaches all of the following(Purpose):
 //  This project develops a mixed-language program that integrates C/C++ functions with x86-64 assembly routines in order to 
 //  create a workspace for GDB exploration. The program accepts an array of floating-point numbers from the user, 
 //  computes their sum, sorts the values, and outputs the results.                                                          *
@@ -17,14 +17,11 @@
 //  Author CWID    : 830259727 
 // 
 //  Program information
-//  Program name: sort.c
+//  Program name: Gnu Debugger
 //  Program languages: C86-64
 //  Date Program began: 09/29/2025
-//  Date of last update: //2025
+//  Date of last update: 10//2025
 // 		 
-//  Purpose:
-//  Sorts the float array in ascending order using selection sort algorithm
-//  Important: Instead of swapping inline, it calls the assembly swap function.
 // 
 //  Project Information:
 //  The primary purpose of this project is to provide a structured environment for learning and practicing the GNU Debugger (GDB). 
@@ -34,10 +31,9 @@
 //  students can focus on mastering GDB commands and techniques in the context of a working program.
 // 
 // 
-//  Files: driver.c, manager.asm, input_array.asm, output_array.asm, sum.as, swap.asm, sort.c data.inc, r.sh
+//  Files: sort.c 
 //  Language: C86-64
 //  Status: The program has been tested extensively with no detectable errors.
-// 
 // 
 // ===== Begin code area ====================================================================================================================================================
 #include <stdio.h>
