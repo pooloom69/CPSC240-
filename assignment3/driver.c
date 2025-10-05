@@ -17,16 +17,11 @@
 //  Author CWID    : 830259727 
 // 
 //  Program information
-//  Program name: driver.c
+//  Program name: Gnu Debugger
 //  Program languages: C86-64
 //  Date Program began: 09/29/2025
 //  Date of last update: //2025
 // 		 
-//  Purpose:
-//  Prints greeting messages.
-//  Collects user information (name, occupation).
-//  Calls the manager function to run the main workflow.
-//  Prints the final messages (e.g., sum result, farewell).
 // 
 //  Project Information:
 //  The primary purpose of this project is to provide a structured environment for learning and practicing the GNU Debugger (GDB). 
@@ -36,7 +31,7 @@
 //  students can focus on mastering GDB commands and techniques in the context of a working program.
 // 
 // 
-//  Files: driver.c, manager.asm, input_array.asm, output_array.asm, sum.as, swap.asm, sort.c data.inc, r.sh
+//  Files: driver.c
 //  Language: C86-64
 //  Status: The program has been tested extensively with no detectable errors.
 // 
